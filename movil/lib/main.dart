@@ -6,24 +6,32 @@ class Database {
     port: 3306,
     user: 'dart_user',
     password: 'Abcd1234*',
-    db: 'adso25'
+    db: 'juancho'
   );
 
-  Future<void> testConnection() async {
-    try {
-      final conn = await MySqlConnection.connect(settings);
-      print(
-          'Conexión exitosa a la base de datos'); // Mensaje de conexión exitosa
-      await conn.close();
-    } catch (e) {
-      print('Error al conectar a la base de datos: $e'); // Mensaje de error
-    }
+  Future<List<Map<String, dynamic>>> getProducts() async {
+  final conn = await MySqlConnection.connect(settings);
+  print('Conexión exitosa a la base de datos'); // Mensaje de conexión
+
+  try {
+    var results = await conn.query('SELECT * FROM usuarios');
+    return results.map((row) => row.fields).toList();
+  } finally {
+    await conn.close();
+  }
   }
 }
 
 void main() async {
   var db = Database();
 
-  // Probar la conexión a la base de datos
-  await db.testConnection();
+  try {
+    var products = await db.getProducts();
+    print('Productos obtenidos:');
+    for (var product in products) {
+      print(product);
+    }
+  } catch (e) {
+    print('Error al obtener los productos: $e');
+  }
 }
