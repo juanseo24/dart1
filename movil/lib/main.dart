@@ -1,72 +1,83 @@
 import 'dart:io';
-import 'crud.dart';
+import 'crud.dart'; // Importa el archivo CRUD
 
 void main() async {
   var db = Database();
+  bool salir = false;
 
-  List<String> opciones = [
-    'Mostrar usuarios',
-    'Insertar usuario',
-    'Actualizar usuario',
-    'Eliminar usuario',
-    'Salir'
-  ];
-
-  while (true) {
-    print('\n=== Menú de Opciones ===');
-    for (int i = 0; i < opciones.length; i++) {
-      print('${i + 1}. ${opciones[i]}');
-    }
-
-    stdout.write('\nSelecciona una opción (1-${opciones.length}): ');
-    int? opcion = int.tryParse(stdin.readLineSync()!);
+  while (!salir) {
+    print('\n===== CRUD de Usuarios (Dart + MySQL) =====');
+    print('1. Listar usuarios');
+    print('2. Insertar usuario');
+    print('3. Actualizar usuario');
+    print('4. Eliminar usuario');
+    print('5. Salir');
+    stdout.write('Selecciona una opción: ');
+    String? opcion = stdin.readLineSync();
 
     switch (opcion) {
-      case 1:
+      case '1':
         var usuarios = await db.getUsuarios();
-        usuarios.forEach((u) => print(u));
+        print('\n--- Lista de usuarios ---');
+        for (var u in usuarios) {
+          print(u);
+        }
         break;
 
-      case 2:
+      case '2':
         stdout.write('Nombre: ');
-        String nombre = stdin.readLineSync()!;
+        String? nombre = stdin.readLineSync();
         stdout.write('Email: ');
-        String email = stdin.readLineSync()!;
-        stdout.write('Fecha nacimiento (AAAA-MM-DD): ');
-        String fecha = stdin.readLineSync()!;
+        String? email = stdin.readLineSync();
+        stdout.write('Fecha de nacimiento (YYYY-MM-DD): ');
+        String? fecha = stdin.readLineSync();
         stdout.write('Edad: ');
-        int edad = int.parse(stdin.readLineSync()!);
+        int? edad = int.tryParse(stdin.readLineSync() ?? '');
 
-        await db.insertUsuario(nombre, email, fecha, edad);
+        if (nombre != null && email != null && fecha != null && edad != null) {
+          await db.insertUsuario(nombre, email, fecha, edad);
+        } else {
+          print('Datos inválidos');
+        }
         break;
 
-      case 3:
+      case '3':
         stdout.write('ID del usuario a actualizar: ');
-        int id = int.parse(stdin.readLineSync()!);
+        int? id = int.tryParse(stdin.readLineSync() ?? '');
         stdout.write('Nuevo nombre: ');
-        String nombre = stdin.readLineSync()!;
+        String? nombre = stdin.readLineSync();
         stdout.write('Nuevo email: ');
-        String email = stdin.readLineSync()!;
-        stdout.write('Nueva fecha nacimiento (YYYY-MM-DD): ');
-        String fecha = stdin.readLineSync()!;
+        String? email = stdin.readLineSync();
+        stdout.write('Nueva fecha de nacimiento (YYYY-MM-DD): ');
+        String? fecha = stdin.readLineSync();
         stdout.write('Nueva edad: ');
-        int edad = int.parse(stdin.readLineSync()!);
+        int? edad = int.tryParse(stdin.readLineSync() ?? '');
 
-        await db.updateUsuario(id, nombre, email, fecha, edad);
+        if (id != null && nombre != null && email != null && fecha != null && edad != null) {
+          await db.updateUsuario(id, nombre, email, fecha, edad);
+        } else {
+          print('Datos inválidos');
+        }
         break;
 
-      case 4:
+      case '4':
         stdout.write('ID del usuario a eliminar: ');
-        int id = int.parse(stdin.readLineSync()!);
-        await db.deleteUsuario(id);
+        int? id = int.tryParse(stdin.readLineSync() ?? '');
+        if (id != null) {
+          await db.deleteUsuario(id);
+        } else {
+          print(' ID inválido');
+        }
         break;
 
-      case 5:
-        print('Se salio del programa');
-        return;
+      case '5':
+        print('Saliendo...');
+        salir = true;
+        break;
 
       default:
-        print('Opción inválida. Intenta de nuevo.');
+        print('Opción no válida');
+        break;
     }
   }
 }
