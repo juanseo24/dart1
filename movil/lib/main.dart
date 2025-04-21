@@ -6,7 +6,6 @@ void main() async {
   bool salir = false;
 
   while (!salir) {
-    print('\n===== CRUD de Usuarios (Dart + MySQL) =====');
     print('1. Listar usuarios');
     print('2. Insertar usuario');
     print('3. Actualizar usuario');

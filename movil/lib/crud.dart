@@ -35,7 +35,7 @@ final ConnectionSettings settings = ConnectionSettings(
     ); // Mensaje de conexión exitosa
     try {
       await conn.query(
-        'INSERT INTO usuarios (nombre, email, fecha_nacimiento, edad) VALUES (?, ?, ?, ?)',
+        'INSERT INTO usuarios (nombre, email, fechanacimiento, edad) VALUES (?, ?, ?, ?)',
         [nombre, email, fechanacimiento, edad],
       );
       print(
@@ -62,7 +62,7 @@ final ConnectionSettings settings = ConnectionSettings(
     ); // Mensaje de conexión exitosa
     try {
       await conn.query(
-        'UPDATE usuarios SET nombre = ?, email = ?, fecha_nacimiento = ?, edad = ? WHERE id = ?',
+        'UPDATE usuarios SET nombre = ?, email = ?, fechanacimiento = ?, edad = ? WHERE id = ?',
         [nombre, email, fechanacimiento, edad, id],
       );
       print(
